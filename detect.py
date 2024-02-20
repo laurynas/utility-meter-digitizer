@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 
-MODEL_FILE = 'models/yolo-detect-20240220.pt'
+MODEL_FILE = 'models/yolov8-detect-20240220.pt'
 IMAGE_FILE = 'samples/watermeter1.jpg'
 CONFIDENCE = 0.5
 
