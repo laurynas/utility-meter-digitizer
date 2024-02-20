@@ -4,7 +4,7 @@ Digitize utility meter readings from photos
 
 ## Model
 
-Model was trained using YOLOv8 open source [utility meters dataset](https://universe.roboflow.com/watermeter-jvlgr/utility-meter-reading-dataset-for-automatic-reading-yolo) from Roboflow.
+Model was trained using [YOLOv8](https://docs.ultralytics.com/tasks/detect/#__tabbed_1_2) open source [utility meters dataset](https://universe.roboflow.com/watermeter-jvlgr/utility-meter-reading-dataset-for-automatic-reading-yolo) from Roboflow.
 
 > yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=100 imgsz=640 device=mps
 
