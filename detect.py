@@ -11,7 +11,7 @@ result = results[0]
 
 def digitize(rows):
     # sort by x position
-    rows = sorted(rows, key=lambda x: x[0])
+    rows = sorted(rows, key=lambda r: r[0])
     reading = ''
 
     for row in rows:
