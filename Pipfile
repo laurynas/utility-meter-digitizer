@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 ultralytics = ">=8.1.16"
+flask = ">=3.0.2"
 
 [dev-packages]
 
