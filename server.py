@@ -14,5 +14,4 @@ def detect():
     result = digitizer.detect(image)
     return result
 
-if __name__ == '__main__':
-    app.run(port=PORT)
+app.run(port=PORT)
