@@ -1,29 +1,31 @@
-from ultralytics import YOLO
+from .yolov8 import YOLOv8
 
 class Digitizer:
     CLASSES = range(0, 9)
-    DEFAULT_CONFIDENCE = 0.5
+    DEFAULT_THRESHOLD = 0.5
 
     def __init__(self, model_file):
-        self.model = YOLO(model_file)
+        self.model = YOLOv8(model_file)
 
-    def detect(self, image, confidence=DEFAULT_CONFIDENCE):
-        rows = self.yolo(image, confidence)
+    def detect_string(self, image, conf_threshold=DEFAULT_THRESHOLD):
+        results = self.detect(image, conf_threshold)
 
-        # sort by x position
-        rows = sorted(rows, key=lambda r: r[0])
         reading = ''
 
-        for row in rows:
-            reading += str(int(row[-1]))
+        for result in results:
+            reading += str(int(result[0]))
 
         return reading
     
-    def yolo(self, image, confidence):
-        results = self.model(image, conf=confidence, classes=self.CLASSES)
-        result = results[0]
+    def detect(self, image, conf_threshold=DEFAULT_THRESHOLD):
+        boxes, scores, class_ids = self.model.detect_objects(image, conf_threshold)
 
-        #result.show()
-        #print(result.tojson())
+        results = zip(class_ids, scores, boxes)
 
-        return result.boxes.data.cpu().tolist()
+        # filter out digits
+        results = [r for r in results if r[0] in self.CLASSES]
+
+        # sort by x coordinate
+        results = sorted(results, key=lambda b: b[2][0])
+
+        return results  
