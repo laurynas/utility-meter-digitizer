@@ -1,17 +1,39 @@
-from flask import Flask, request
 from PIL import Image
 from src.digitizer import Digitizer
+from io import BytesIO
+import http.server
+import socketserver
+import signal
 
 MODEL_FILE = 'models/yolov8-detect-20240220.onnx'
 PORT = 8000
 
-app = Flask(__name__)
 digitizer = Digitizer(MODEL_FILE)
 
-@app.route('/detect', methods=['POST'])
-def detect():
-    image = Image.open(request.files['image'])
-    result = digitizer.detect_string(image)
-    return result
+class HTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+    def do_POST(self):
+        length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(length)
 
-app.run(port=PORT, host='0.0.0.0')
+        image = Image.open(BytesIO(post_data))
+        result = digitizer.detect_string(image)
+
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain")
+        self.end_headers()
+
+        self.wfile.write(result.encode('utf-8'))
+        return
+
+server = socketserver.TCPServer(("", PORT), HTTPRequestHandler)
+
+def signal_handler(sig, frame):
+    print('Stopping...')
+    server.server_close()
+    exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
+
+print(f"Starting server on port {PORT}")
+server.serve_forever()
