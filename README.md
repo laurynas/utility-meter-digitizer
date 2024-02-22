@@ -2,6 +2,20 @@
 
 Digitize utility meter readings from photos
 
+## Demo
+
+> python demo.py
+
+# Server
+
+Start server
+
+> python server.py
+
+POST image using curl
+
+> curl -X POST --data-binary @samples/watermeter1.jpg http://localhost:8000/detect
+
 ## Model
 
 Model was trained using [YOLOv8](https://docs.ultralytics.com/tasks/detect/#__tabbed_1_2) open source [utility meters dataset](https://universe.roboflow.com/watermeter-jvlgr/utility-meter-reading-dataset-for-automatic-reading-yolo) from Roboflow.
