@@ -1,8 +1,10 @@
+from PIL import Image
 from src.digitizer import Digitizer
 
-MODEL_FILE = 'models/yolov8-detect-20240220.pt'
-IMAGE_FILE = 'samples/watermeter1.jpg'
+model_file = 'models/yolov8-detect-20240220.onnx'
+image_file = 'samples/watermeter1.jpg'
 
-result = Digitizer(MODEL_FILE).detect(IMAGE_FILE)
+image = Image.open(image_file)
+result = Digitizer(model_file).detect_string(image)
 
 print(result)
