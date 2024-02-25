@@ -10,7 +10,7 @@ PORT = 8000
 
 digitizer = Digitizer(MODEL_FILE)
 
-class HTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(length)
