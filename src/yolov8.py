@@ -6,7 +6,7 @@ import onnxruntime
 from .utils import xywh2xyxy, multiclass_nms
 
 class YOLOv8:
-    def __init__(self, path, iou_thres=0.75):
+    def __init__(self, path, iou_thres=0.7):
         self.iou_threshold = iou_thres
 
         # Initialize model

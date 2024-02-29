@@ -1,8 +1,8 @@
 from .yolov8 import YOLOv8
 
 class Digitizer:
-    CLASSES = range(0, 9)
-    DEFAULT_THRESHOLD = 0.5
+    CLASSES = range(0, 10)
+    DEFAULT_THRESHOLD = 0.7
 
     def __init__(self, model_file):
         self.model = YOLOv8(model_file)
