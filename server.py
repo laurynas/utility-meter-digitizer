@@ -5,7 +5,7 @@ import http.server
 import socketserver
 import signal
 
-MODEL_FILE = 'models/yolov8-detect-20240220.onnx'
+MODEL_FILE = 'models/yolov8-detect-20240229.onnx'
 PORT = 8000
 
 digitizer = Digitizer(MODEL_FILE)

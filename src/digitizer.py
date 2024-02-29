@@ -9,7 +9,6 @@ class Digitizer:
 
     def detect_string(self, image, conf_threshold=DEFAULT_THRESHOLD):
         results = self.detect(image, conf_threshold)
-
         reading = ''
 
         for result in results:

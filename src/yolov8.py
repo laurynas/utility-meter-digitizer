@@ -6,7 +6,7 @@ import onnxruntime
 from .utils import xywh2xyxy, multiclass_nms
 
 class YOLOv8:
-    def __init__(self, path, iou_thres=0.5):
+    def __init__(self, path, iou_thres=0.75):
         self.iou_threshold = iou_thres
 
         # Initialize model
@@ -20,7 +20,7 @@ class YOLOv8:
         self.get_output_details()
 
 
-    def detect_objects(self, image, conf_threshold=0.7):
+    def detect_objects(self, image, conf_threshold=0.5):
         input_tensor = self.prepare_input(image)
 
         # Perform inference on the image
