@@ -21,7 +21,7 @@ class Digitizer:
 
         results = zip(class_ids, scores, boxes)
 
-        # filter out digits
+        # select only the classes we are interested in
         results = [r for r in results if r[0] in self.CLASSES]
 
         # sort by x coordinate
