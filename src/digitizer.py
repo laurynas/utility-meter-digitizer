@@ -27,4 +27,21 @@ class Digitizer:
         # sort by x coordinate
         results = sorted(results, key=lambda b: b[2][0])
 
-        return results  
+        results = self.remove_overlapping(results)
+
+        return results
+
+    # remove overlapping boxes by x coordinate keeping the one with the highest score
+    def remove_overlapping(self, results):
+        if len(results) == 0:
+            return []
+
+        output = [results[0]]
+
+        for i in range(1, len(results)):
+            if results[i][2][0] > output[-1][2][2]:
+                output.append(results[i])
+            elif results[i][1] > output[-1][1]:
+                output[-1] = results[i]
+
+        return output
