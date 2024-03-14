@@ -28,7 +28,15 @@ You can start the server on Docker like this:
 ```shell
 docker run -p 8000:8000 kurmisrainas/utility-meter-digitizer
 ```
+Also you can use docker-compose:
 
+```yaml
+services:
+  utility-meter-digitizer:
+    image: kurmisrainas/utility-meter-digitizer
+    ports:
+      - 8000:8000
+```
 
 ## Model
 
