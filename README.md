@@ -2,6 +2,8 @@
 
 Digitize utility meter readings from photos using AI model.
 
+Can be used with Home Assistant to digitize utility meter readings from camera. [Integration component](https://github.com/laurynas/hass-utility-meter-digitizer).
+
 ## Demo
 
 ```shell
