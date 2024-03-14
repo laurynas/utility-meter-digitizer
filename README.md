@@ -1,6 +1,6 @@
 # utility-meter-digitizer
 
-Digitize utility meter readings from photos
+Digitize utility meter readings from photos using AI model.
 
 ## Demo
 
