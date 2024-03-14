@@ -1,4 +1,4 @@
-# utility-meter-digitizer
+# Utility Meter Digitizer
 
 Digitize utility meter readings from photos using AI model.
 
