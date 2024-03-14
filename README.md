@@ -1,4 +1,4 @@
-# utility-meter-reader
+# utility-meter-digitizer
 
 Digitize utility meter readings from photos
 
@@ -14,7 +14,7 @@ Start server
 
 POST image using curl
 
-> curl -X POST --data-binary @samples/watermeter1.jpg http://localhost:8000/detect
+> curl -X POST --data-binary @samples/watermeter1.jpg http://localhost:8000/digitize
 
 ## Model
 
