@@ -26,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: kurmisrainas/utility-meter-reader:latest
+          tags: kurmisrainas/utility-meter-digitizer:latest
