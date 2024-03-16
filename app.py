@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 from src.digitizer import Digitizer
-from src.route_converters import IdentifierConverter
+from src.routing import IdentifierConverter
 from io import BytesIO
 from flask import Flask, request
 import json
