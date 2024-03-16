@@ -15,7 +15,7 @@ python demo.py
 Start server
 
 ```shell
-python server.py
+gunicorn app:app
 ```
 
 POST image using curl

@@ -1,2 +1,4 @@
 onnxruntime==1.17.0
 pillow
+Flask==3.0.2
+gunicorn==21.2.0
