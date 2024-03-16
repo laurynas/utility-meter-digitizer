@@ -16,9 +16,12 @@ app.url_map.converters['identifier'] = IdentifierConverter
 
 @app.route('/digitize', methods=['POST'])
 def digitize():
+    decimals = request.args.get('decimals', default=0, type=int)
     data = request.get_data()
     image = Image.open(BytesIO(data))
-    return digitizer.detect_string(image)
+    reading = digitizer.detect_string(image)
+    value = float(reading) / (10 ** decimals)
+    return json.dumps({'value': value}), 200, {'Content-Type': 'application/json'}
 
 @app.route('/meter/<identifier:meter_id>', methods=['POST'])
 def update_meter(meter_id):
