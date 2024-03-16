@@ -28,7 +28,7 @@ def update_meter(meter_id):
     
     data = request.get_data()    
     image = Image.open(BytesIO(data))
-    
+
     reading = digitizer.detect_string(image)
     value = float(reading) / (10 ** decimals)
 
@@ -40,12 +40,14 @@ def update_meter(meter_id):
         if value - data['value'] > max_increase:
             return 'Reading increased too much', 400
 
+    json_data = json.dumps({'value': value})
+
     with open(json_file, 'w') as f:
-        json.dump({'value': value}, f)
+        f.write(json_data)
 
     image.save(os.path.join(data_dir, f'{meter_id}.jpg'))
 
-    return str(value), 200, {'Content-Type': 'text/plain'}
+    return json_data, 200, {'Content-Type': 'application/json'}
 
 @app.route('/meter/<identifier:meter_id>/image', methods=['GET'])
 def meter_image(meter_id):
