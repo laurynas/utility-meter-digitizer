@@ -11,28 +11,28 @@ class Digitizer:
     def detect(self, image, conf_threshold=DEFAULT_THRESHOLD):
         output = self.model.detect_objects(image, conf_threshold)
 
-        results = [DetectedObject(*r) for r in zip(*output)]
+        objects = [DetectedObject(*r) for r in zip(*output)]
         # select only the classes we are interested in
-        results = [r for r in results if r.class_id in self.CLASSES]
+        objects = [o for o in objects if o.class_id in self.CLASSES]
         # sort by x coordinate
-        results = sorted(results, key=lambda r: r.box[0])
-        results = self._remove_overlapping(results)
+        objects = sorted(objects, key=lambda o: o.box[0])
+        objects = self._remove_overlapping(objects)
 
-        reading = ''.join([str(r.class_id) for r in results])
+        reading = ''.join([str(o.class_id) for o in objects])
 
-        return reading, results
+        return reading, objects
 
     # remove overlapping boxes by x coordinate keeping the one with the highest score
-    def _remove_overlapping(self, results):
-        if len(results) == 0:
+    def _remove_overlapping(self, objects):
+        if len(objects) == 0:
             return []
 
-        output = [results[0]]
+        output = [objects[0]]
 
-        for i in range(1, len(results)):
-            if results[i].box[0] > output[-1].box[2]:
-                output.append(results[i])
-            elif results[i].score > output[-1].score:
-                output[-1] = results[i]
+        for i in range(1, len(objects)):
+            if objects[i].box[0] > output[-1].box[2]:
+                output.append(objects[i])
+            elif objects[i].score > output[-1].score:
+                output[-1] = objects[i]
 
         return output
