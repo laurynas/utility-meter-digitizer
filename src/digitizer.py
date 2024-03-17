@@ -8,7 +8,7 @@ class Digitizer:
     def __init__(self, model_file):
         self.model = YOLOv8(model_file)
 
-    def detect(self, image, conf_threshold=DEFAULT_THRESHOLD):
+    def detect(self, image, decimals=0, conf_threshold=DEFAULT_THRESHOLD):
         output = self.model.detect_objects(image, conf_threshold)
 
         objects = [DetectedObject(*r) for r in zip(*output)]
@@ -18,9 +18,9 @@ class Digitizer:
         objects = sorted(objects, key=lambda o: o.box[0])
         objects = self._remove_overlapping(objects)
 
-        reading = ''.join([str(o.class_id) for o in objects])
+        value = self._digitize(objects, decimals)
 
-        return reading, objects
+        return value, objects
 
     # remove overlapping boxes by x coordinate keeping the one with the highest score
     def _remove_overlapping(self, objects):
@@ -36,3 +36,11 @@ class Digitizer:
                 output[-1] = objects[i]
 
         return output
+
+    def _digitize(self, objects, decimals):
+        string = ''.join([str(o.class_id) for o in objects])
+
+        if len(string) > 0:
+            return float(string) / (10 ** decimals)
+        else:
+            return None
