@@ -3,6 +3,7 @@ import json
 from PIL import Image
 from src.digitizer import Digitizer
 from src.routing import IdentifierConverter
+from src.draw import draw_objects
 from io import BytesIO
 from glob import glob
 from flask import Flask, request
@@ -34,7 +35,7 @@ def update_meter(meter_id):
     data = request.get_data()    
     image = Image.open(BytesIO(data))
 
-    reading, _ = digitizer.detect(image)
+    reading, objects = digitizer.detect(image)
     value = float(reading) / (10 ** decimals)
 
     if os.path.exists(json_file):
@@ -51,6 +52,10 @@ def update_meter(meter_id):
         f.write(json_data)
 
     image.save(os.path.join(data_dir, f'{meter_id}.jpg'))
+
+    draw_objects(image, objects)
+
+    image.save(os.path.join(data_dir, f'{meter_id}_result.jpg'))
 
     return json_data, 200, {'Content-Type': 'application/json'}
 
