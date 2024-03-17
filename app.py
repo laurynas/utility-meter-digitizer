@@ -1,10 +1,12 @@
 import os
+import json
 from PIL import Image
 from src.digitizer import Digitizer
 from src.routing import IdentifierConverter
 from io import BytesIO
+from glob import glob
 from flask import Flask, request
-import json
+
 
 model = 'models/yolov8-detect-20240229.onnx'
 data_dir = 'data/'
@@ -69,18 +71,14 @@ def meter_image(meter_id):
 
 @app.route('/meter/<identifier:meter_id>/reset', methods=['GET'])
 def reset_meter(meter_id):
-    value = request.args.get('value', type=float)
-    json_file = os.path.join(data_dir, f'{meter_id}.json')
-    image_file = os.path.join(data_dir, f'{meter_id}.jpg')
-    
-    if os.path.exists(json_file):
-        os.remove(json_file)
-    
-    if os.path.exists(image_file):
-        os.remove(image_file)
+    for file in glob(f'{data_dir}{meter_id}.*'):
+        os.remove(file)
+
+    value = request.args.get('value', default=None, type=float)
 
     if value is not None:
         json_data = json.dumps({'value': value})
+        json_file = os.path.join(data_dir, f'{meter_id}.json')
         with open(json_file, 'w') as f:
             f.write(json_data)
 
