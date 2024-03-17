@@ -1,4 +1,5 @@
 from .yolov8 import YOLOv8
+from .detected_object import DetectedObject
 
 class Digitizer:
     CLASSES = range(0, 10)
@@ -8,17 +9,16 @@ class Digitizer:
         self.model = YOLOv8(model_file)
 
     def detect(self, image, conf_threshold=DEFAULT_THRESHOLD):
-        boxes, scores, class_ids = self.model.detect_objects(image, conf_threshold)
+        output = self.model.detect_objects(image, conf_threshold)
 
-        results = zip(class_ids, scores, boxes)
-
+        results = [DetectedObject(*r) for r in zip(*output)]
         # select only the classes we are interested in
-        results = [r for r in results if r[0] in self.CLASSES]
-
+        results = [r for r in results if r.class_id in self.CLASSES]
         # sort by x coordinate
-        results = sorted(results, key=lambda b: b[2][0])
+        results = sorted(results, key=lambda r: r.box[0])
         results = self._remove_overlapping(results)
-        reading = self._build_string(results)
+
+        reading = ''.join([str(r.class_id) for r in results])
 
         return reading, results
 
@@ -30,12 +30,9 @@ class Digitizer:
         output = [results[0]]
 
         for i in range(1, len(results)):
-            if results[i][2][0] > output[-1][2][2]:
+            if results[i].box[0] > output[-1].box[2]:
                 output.append(results[i])
-            elif results[i][1] > output[-1][1]:
+            elif results[i].score > output[-1].score:
                 output[-1] = results[i]
 
         return output
-
-    def _build_string(self, results):
-        return ''.join([str(int(result[0])) for result in results])
