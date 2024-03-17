@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw, ImageFont
+from PIL import ImageDraw, ImageFont
 
 def draw_objects(image, objects, color='white'):
     draw = ImageDraw.Draw(image)
