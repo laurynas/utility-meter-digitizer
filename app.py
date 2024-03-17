@@ -21,7 +21,7 @@ def digitize():
     decimals = request.args.get('decimals', default=0, type=int)
     data = request.get_data()
     image = Image.open(BytesIO(data))
-    reading = digitizer.detect_string(image)
+    reading, _ = digitizer.detect(image)
     value = float(reading) / (10 ** decimals)
     return json.dumps({'value': value}), 200, {'Content-Type': 'application/json'}
 
@@ -34,7 +34,7 @@ def update_meter(meter_id):
     data = request.get_data()    
     image = Image.open(BytesIO(data))
 
-    reading = digitizer.detect_string(image)
+    reading, _ = digitizer.detect(image)
     value = float(reading) / (10 ** decimals)
 
     if os.path.exists(json_file):

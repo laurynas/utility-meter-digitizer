@@ -7,15 +7,6 @@ class Digitizer:
     def __init__(self, model_file):
         self.model = YOLOv8(model_file)
 
-    def detect_string(self, image, conf_threshold=DEFAULT_THRESHOLD):
-        results = self.detect(image, conf_threshold)
-        reading = ''
-
-        for result in results:
-            reading += str(int(result[0]))
-
-        return reading
-    
     def detect(self, image, conf_threshold=DEFAULT_THRESHOLD):
         boxes, scores, class_ids = self.model.detect_objects(image, conf_threshold)
 
@@ -26,13 +17,13 @@ class Digitizer:
 
         # sort by x coordinate
         results = sorted(results, key=lambda b: b[2][0])
+        results = self._remove_overlapping(results)
+        reading = self._build_string(results)
 
-        results = self.remove_overlapping(results)
-
-        return results
+        return reading, results
 
     # remove overlapping boxes by x coordinate keeping the one with the highest score
-    def remove_overlapping(self, results):
+    def _remove_overlapping(self, results):
         if len(results) == 0:
             return []
 
@@ -45,3 +36,6 @@ class Digitizer:
                 output[-1] = results[i]
 
         return output
+
+    def _build_string(self, results):
+        return ''.join([str(int(result[0])) for result in results])
