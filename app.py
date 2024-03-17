@@ -8,7 +8,6 @@ from io import BytesIO
 from glob import glob
 from flask import Flask, request
 
-
 model = 'models/yolov8-detect-20240229.onnx'
 data_dir = 'data/'
 
@@ -19,25 +18,18 @@ app.url_map.converters['identifier'] = IdentifierConverter
 
 @app.route('/digitize', methods=['POST'])
 def digitize():
-    decimals = request.args.get('decimals', default=0, type=int)
-    data = request.get_data()
-    image = Image.open(BytesIO(data))
-    reading, _ = digitizer.detect(image)
-    value = float(reading) / (10 ** decimals)
-    return json.dumps({'value': value}), 200, {'Content-Type': 'application/json'}
+    value, _, _ = _detect()
+    json_data = json.dumps({'value': value})
+
+    return json_data, 200, {'Content-Type': 'application/json'}
 
 @app.route('/meter/<identifier:meter_id>', methods=['POST'])
 def update_meter(meter_id):
+    value, objects, image = _detect()
+
     json_file = os.path.join(data_dir, f'{meter_id}.json')
-    decimals = request.args.get('decimals', default=0, type=int)
     max_increase = request.args.get('max_increase', default=float('inf'), type=float)
     
-    data = request.get_data()    
-    image = Image.open(BytesIO(data))
-
-    reading, objects = digitizer.detect(image)
-    value = float(reading) / (10 ** decimals)
-
     if os.path.exists(json_file):
         with open(json_file, 'r') as f:
             data = json.load(f)
@@ -61,18 +53,15 @@ def update_meter(meter_id):
 
 @app.route('/meter/<identifier:meter_id>', methods=['GET'])
 def show_meter(meter_id):
-    json_file = os.path.join(data_dir, f'{meter_id}.json')
-    if not os.path.exists(json_file):
-        return 'Meter not found', 404
-    with open(json_file, 'r') as f:
-        return f.read(), 200, {'Content-Type': 'application/json'}
+    return _send_file(f'{meter_id}.json', 'application/json')
 
 @app.route('/meter/<identifier:meter_id>/image', methods=['GET'])
 def meter_image(meter_id):
-    image_path = os.path.join(data_dir, f'{meter_id}.jpg')
-    if not os.path.exists(image_path):
-        return 'Meter not found', 404
-    return open(image_path, 'rb').read(), 200, {'Content-Type': 'image/jpeg'}
+    return _send_file(f'{meter_id}.jpg', 'image/jpeg')
+
+@app.route('/meter/<identifier:meter_id>/image_result', methods=['GET'])
+def meter_image_result(meter_id):
+    return _send_file(f'{meter_id}_result.jpg', 'image/jpeg')
 
 @app.route('/meter/<identifier:meter_id>/reset', methods=['GET'])
 def reset_meter(meter_id):
@@ -88,3 +77,22 @@ def reset_meter(meter_id):
             f.write(json_data)
 
     return 'Meter reset', 200
+
+def _detect():
+    decimals = request.args.get('decimals', default=0, type=int)
+    data = request.get_data()
+    image = Image.open(BytesIO(data))
+    reading, objects = digitizer.detect(image)
+    value = float(reading) / (10 ** decimals)
+
+    return value, objects, image
+
+def _send_file(file_name, content_type):
+    path = os.path.join(data_dir, file_name)
+    
+    if not os.path.exists(path):
+        return 'Meter not found', 404
+    
+    data = open(path, 'rb').read()
+
+    return data, 200, {'Content-Type': content_type}
