@@ -5,6 +5,6 @@ model_file = 'models/yolov8-detect-20240229.onnx'
 image_file = 'samples/watermeter1.jpg'
 
 image = Image.open(image_file)
-result = Digitizer(model_file).detect_string(image)
+reading, _ = Digitizer(model_file).detect(image)
 
-print(result)
+print(reading)
