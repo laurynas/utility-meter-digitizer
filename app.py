@@ -19,6 +19,10 @@ app.url_map.converters['identifier'] = IdentifierConverter
 @app.route('/digitize', methods=['POST'])
 def digitize():
     value, _, _ = _detect()
+
+    if value is None:
+        return 'No reading found', 400
+
     json_data = json.dumps({'value': value})
 
     return json_data, 200, {'Content-Type': 'application/json'}
@@ -26,6 +30,9 @@ def digitize():
 @app.route('/meter/<identifier:meter_id>', methods=['POST'])
 def update_meter(meter_id):
     value, objects, image = _detect()
+
+    if value is None:
+        return 'No reading found', 400
 
     json_file = os.path.join(data_dir, f'{meter_id}.json')
     max_increase = request.args.get('max_increase', default=float('inf'), type=float)
@@ -80,10 +87,15 @@ def reset_meter(meter_id):
 
 def _detect():
     decimals = request.args.get('decimals', default=0, type=int)
+    threshold = request.args.get('threshold', default=0.7, type=float)
     data = request.get_data()
     image = Image.open(BytesIO(data))
-    reading, objects = digitizer.detect(image)
-    value = float(reading) / (10 ** decimals)
+    reading, objects = digitizer.detect(image, threshold)
+
+    if len(reading):
+        value = float(reading) / (10 ** decimals)
+    else:
+        value = None
 
     return value, objects, image
 
