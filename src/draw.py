@@ -1,6 +1,6 @@
 from PIL import ImageDraw, ImageFont
 
-def draw_objects(image, objects, color='white'):
+def draw_objects(image, objects, color='blue'):
     draw = ImageDraw.Draw(image)
     font = ImageFont.load_default()
     offset = font.size + 3
