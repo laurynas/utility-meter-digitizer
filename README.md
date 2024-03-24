@@ -4,6 +4,13 @@ Digitize utility meter readings from photos using AI model.
 
 Can be used with Home Assistant to digitize utility meter readings from camera. [Integration component](https://github.com/laurynas/hass-utility-meter-digitizer).
 
+This project is inspired by [AI on the Edge device project](https://github.com/jomjol/AI-on-the-edge-device), but the goal is a bit different:
+
+1. Take picture from any camera (even the cheapest ESP32CAM).
+2. No need for preselecting number positions or aligning - AI model detects automatically.
+
+![result](samples/watermeter2_result.jpg)
+
 ## Demo
 
 ```shell
