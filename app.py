@@ -1,4 +1,5 @@
 import json
+import base64
 from PIL import Image
 from src.digitizer import Digitizer
 from src.routing import IdentifierConverter
@@ -22,7 +23,7 @@ def digitize():
     decimals = request.args.get('decimals', default=0, type=int)
     threshold = request.args.get('threshold', default=0.7, type=float)
     
-    image = Image.open(BytesIO(request.get_data()))
+    image = __request_image()
     value, _ = digitizer.detect(image, decimals, threshold)
 
     if value is None:
@@ -36,7 +37,7 @@ def update_meter(meter_id):
     threshold = request.args.get('threshold', default=0.7, type=float)
     max_increase = request.args.get('max_increase', default=float('inf'), type=float)
 
-    image = Image.open(BytesIO(request.get_data()))
+    image = __request_image()
     value, objects = digitizer.detect(image, decimals, threshold)
 
     if value is None:
@@ -94,3 +95,12 @@ def reset_meter(meter_id):
         storage.store(meter_id, value, blank_image, blank_image)
 
     return 'Meter reset', 200
+
+def __request_image():
+    image_data = request.get_data()
+
+    if 'base64' in image_data.decode('utf-8'):
+        image_data = image_data.decode('utf-8').split('base64,')[1]
+        image_data = base64.b64decode(image_data)
+
+    return Image.open(BytesIO(image_data))
