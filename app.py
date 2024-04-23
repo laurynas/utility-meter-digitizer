@@ -99,8 +99,8 @@ def reset_meter(meter_id):
 def __request_image():
     image_data = request.get_data()
 
-    if 'base64' in image_data.decode('utf-8'):
-        image_data = image_data.decode('utf-8').split('base64,')[1]
-        image_data = base64.b64decode(image_data)
+    # if 'base64' in image_data.decode('utf-8'):
+        # image_data = image_data.decode('utf-8').split('base64,')[1]
+        # image_data = base64.b64decode(image_data)
 
     return Image.open(BytesIO(image_data))
