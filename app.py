@@ -1,5 +1,4 @@
 import json
-import base64
 from PIL import Image
 from src.digitizer import Digitizer
 from src.routing import IdentifierConverter
@@ -98,14 +97,5 @@ def reset_meter(meter_id):
 
 def __request_image():
     image_data = request.get_data()
-
-    try:
-        image_data_str = image_data.decode('utf-8')
-
-        if 'base64' in image_data_str:
-            image_data_b64 = image_data_str.split('base64,')[1]
-            image_data = base64.b64decode(image_data_b64)
-    except UnicodeDecodeError:
-        pass
 
     return Image.open(BytesIO(image_data))
