@@ -65,6 +65,10 @@ Converting to onnx format
 yolo export model=best.pt format=onnx
 ```
 
+## ESPHome
+
+ESP32-Cam device [configuration examples](https://github.com/laurynas/esphome-devices/).
+
 ## Credits
 
 - [Utility meters dataset](https://universe.roboflow.com/watermeter-jvlgr/utility-meter-reading-dataset-for-automatic-reading-yolo/dataset/1) from Roboflow
