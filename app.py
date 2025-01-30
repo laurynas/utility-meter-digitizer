@@ -1,4 +1,5 @@
 import json
+import os
 from PIL import Image
 from src.digitizer import Digitizer
 from src.routing import IdentifierConverter
@@ -8,7 +9,7 @@ from io import BytesIO
 from glob import glob
 from flask import Flask, request, send_file
 
-model = 'models/yolov8-detect-20240229.onnx'
+model = os.getenv("MODEL_PATH", "models/yolov8-detect-20240229.onnx")
 data_dir = 'data/'
 
 digitizer = Digitizer(model)
