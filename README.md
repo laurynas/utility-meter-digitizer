@@ -53,6 +53,7 @@ services:
 
 Model was trained using [YOLOv8](https://docs.ultralytics.com/tasks/detect/#__tabbed_1_2) open source [utility meters dataset](https://universe.roboflow.com/watermeter-jvlgr/utility-meter-reading-dataset-for-automatic-reading-yolo/dataset/1) from Roboflow.
 
+
 ```shell
 yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=100 imgsz=640 device=mps
 ```
@@ -64,6 +65,8 @@ Converting to onnx format
 ```shell
 yolo export model=best.pt format=onnx
 ```
+
+There is a secondary model added from another [roboflow dataset](https://universe.roboflow.com/numbers-for-electric-meters/white-numbers) which some users have found more successful. That can be activated by adding the environment variable `MODEL_PATH=models/white-numbers.v2i.yolov8.onnx`
 
 ## ESPHome
 
