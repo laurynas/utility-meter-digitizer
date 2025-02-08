@@ -65,6 +65,8 @@ Converting to onnx format
 yolo export model=best.pt format=onnx
 ```
 
+There is a secondary model added from another [roboflow dataset](https://universe.roboflow.com/numbers-for-electric-meters/white-numbers) which some users have found more successful. That can be activated by adding the environment variable `MODEL_PATH=models/white-numbers.v2i.yolov8.onnx`
+
 ## ESPHome
 
 ESP32-Cam device [configuration examples](https://github.com/laurynas/esphome-devices/).
